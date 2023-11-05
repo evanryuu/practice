@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    function A(name) {
+      return new _A(name)
+    }
+
+    function _A(name) {
+      let temp = null
+      this.name = name
+      this.stack = []
+
+      console.log('This is ', name)
+
+      setTimeout(() => {
+        this.stack.reduce((prev, fn) => {
+
+          return prev.then(fn)
+        }, Promise.resolve())
+      })
+    }
+
+    _A.prototype.eat = function(duration) {
+      function fn() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            console.log(`Eat for ${duration} ms`)
+            resolve()
+          }, duration)
+        })
+      }
+
+      this.stack.push(fn)
+
+      return this
+    }
+    _A.prototype.go = function(duration) {
+      function fn() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            console.log(`Go for ${duration} ms`)
+            resolve()
+          }, duration)
+        })
+      }
+
+      this.stack.push(fn)
+
+      return this
+    }
+    _A.prototype.sleep = function(duration) {
+      function fn() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            console.log(`Sleep for ${duration} ms`)
+            resolve()
+          }, duration)
+        })
+      }
+
+      this.stack.push(fn)
+
+      return this
+    }
+
+    function newFn(type, duration) {
+      return () => new Promise((resolve) => {
+        setTimeout(() => {
+          console.log(`${type} for ${duration || 0} ms`)
+          resolve()
+        }, duration || 0)
+      })
+    }
+  </script>
+</body>
+
+</html>
