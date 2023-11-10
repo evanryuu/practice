@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    class A {
+      constructor(name) {
+        console.log('my name is', name)
+        this.name = name
+        this.stack = []
+        this.triggerred = false
+      }
+
+      trigger() {
+        if (this.stack.length) {
+          const end = () => new Promise((resolve) => {
+            this.triggerred = false
+            this.stack.length = 0
+            resolve()
+          })
+          this.stack.push(end)
+          this.stack.reduce((p, task) => {
+            return p.then(task)
+          }, Promise.resolve())
+        }
+      }
+
+      schedule(type, time) {
+        const p = () => new Promise((resolve) => {
+          setTimeout(() => {
+            console.log(`${type} for ${time} ms`)
+            resolve()
+          }, time)
+        })
+        this.stack.push(p)
+        if (!this.triggerred) {
+          this.triggerred = true
+          setTimeout(() => {
+            this.trigger()
+          }, 0)
+        }
+
+        return this
+      }
+
+      eat(time) {
+        return this.schedule('Eat', time)
+      }
+
+      sleep(time) {
+        return this.schedule('Sleep', time)
+      }
+
+      go(time) {
+        return this.schedule('Go', time)
+      }
+
+    }
+  </script>
+</body>
+
+</html>
