@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>框选示例</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .selection-box {
+      position: absolute;
+      border: 1px dashed #999;
+      background-color: rgba(0, 0, 255, 0.1);
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <!-- 在这里放置你的可框选的元素 -->
+    <div class="selectable"
+      style="position: absolute; top: 50px; left: 50px; width: 100px; height: 100px; background-color: red;"></div>
+    <div class="selectable"
+      style="position: absolute; top: 150px; left: 150px; width: 100px; height: 100px; background-color: green;"></div>
+    <div class="selectable"
+      style="position: absolute; top: 250px; left: 250px; width: 100px; height: 100px; background-color: blue;"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const app = document.getElementById('app');
+      const selectionBox = document.createElement('div');
+      selectionBox.className = 'selection-box';
+      app.appendChild(selectionBox);
+
+      let isSelecting = false;
+      let startX = 0;
+      let startY = 0;
+
+      document.addEventListener('mousedown', (e) => {
+        isSelecting = true;
+        startX = e.clientX;
+        startY = e.clientY;
+
+        selectionBox.style.display = 'block'
+        selectionBox.style.width = '0';
+        selectionBox.style.height = '0';
+        selectionBox.style.left = `${startX}px`;
+        selectionBox.style.top = `${startY}px`;
+
+        document.addEventListener('mousemove', handleMouseMove);
+      });
+
+      document.addEventListener('mouseup', () => {
+        isSelecting = false;
+
+        // 清除选择框
+        selectionBox.style.width = '0';
+        selectionBox.style.height = '0';
+        selectionBox.style.display = 'none'
+
+        document.removeEventListener('mousemove', handleMouseMove);
+      });
+
+      // function handleMouseMove(e) {
+      //   if (isSelecting) {
+      //     const currentX = e.clientX;
+      //     const currentY = e.clientY;
+
+      //     // 计算选择框的宽度和高度
+      //     const width = currentX - startX;
+      //     const height = currentY - startY;
+
+      //     // 设置选择框的位置和大小
+      //     selectionBox.style.width = `${Math.abs(width)}px`;
+      //     selectionBox.style.height = `${Math.abs(height)}px`;
+      //     selectionBox.style.left = `${width > 0 ? startX : currentX}px`;
+      //     selectionBox.style.top = `${height > 0 ? startY : currentY}px`;
+
+      //     // 遍历所有可选择的元素，检查是否被选择
+      //     const selectableElements = document.querySelectorAll('.selectable');
+      //     selectableElements.forEach((element) => {
+      //       const rect = element.getBoundingClientRect();
+
+      //       if (
+      //         rect.left < startX + selectionBox.offsetWidth &&
+      //         rect.left + rect.width > startX &&
+      //         rect.top < startY + selectionBox.offsetHeight &&
+      //         rect.top + rect.height > startY
+      //       ) {
+      //         element.style.border = '2px solid yellow';
+      //       } else {
+      //         console.log(element, rect, selectionBox)
+      //         element.style.border = 'none';
+      //       }
+      //     });
+      //   }
+      // }
+
+      function handleMouseMove(e) {
+        if (isSelecting) {
+          const currentX = e.clientX;
+          const currentY = e.clientY;
+
+          // 计算选择框的宽度和高度
+          const width = currentX - startX;
+          const height = currentY - startY;
+
+          // 设置选择框的位置和大小
+          selectionBox.style.width = `${Math.abs(width)}px`;
+          selectionBox.style.height = `${Math.abs(height)}px`;
+          selectionBox.style.left = `${width > 0 ? startX : currentX}px`;
+          selectionBox.style.top = `${height > 0 ? startY : currentY}px`;
+
+          // 遍历所有可选择的元素，检查是否被选择
+          const selectableElements = document.querySelectorAll('.selectable');
+          selectableElements.forEach((element) => {
+            const rect = element.getBoundingClientRect();
+
+            if (
+              rect.left < (width > 0 ? startX : currentX) + selectionBox.offsetWidth &&
+              rect.left + rect.width > (width > 0 ? startX : currentX) &&
+              rect.top < (height > 0 ? startY : currentY) + selectionBox.offsetHeight &&
+              rect.top + rect.height > (height > 0 ? startY : currentY)
+            ) {
+              element.style.border = '2px solid yellow';
+            } else {
+              element.style.border = 'none';
+            }
+          });
+        }
+      }
+
+    });
+
+  </script>
+
+</body>
+
+</html>
