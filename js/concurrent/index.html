@@ -8,20 +8,67 @@
 </head>
 
 <body>
-  <script src="./mine.js"></script>
   <script>
     const urls = [
-    'https://jsonplaceholder.typicode.com/todos/1',
-    'https://jsonplaceholder.typicode.com/todos/2',
-    'https://jsonplaceholder.typicode.com/todos/3',
-    'https://jsonplaceholder.typicode.com/todos/4',
-    'https://jsonplaceholder.typicode.com/todos/5',
-    'https://jsonplaceholder.typicode.com/todos/6',
-    'https://jsonplaceholder.typicode.com/todos/7',
-    'https://jsonplaceholder.typicode.com/todos/8',
-    'https://jsonplaceholder.typicode.com/todos/9',
-    'https://jsonplaceholder.typicode.com/todos/10',
+      'https://jsonplaceholder.typicode.com/todos/1',
+      'https://jsonplaceholder.typicode.com/todos/2',
+      'https://jsonplaceholder.typicode.com/todos/3',
+      'https://jsonplaceholder.typicode.com/todos/4',
+      'https://jsonplaceholder.typicode.com/todos/5',
+      'https://jsonplaceholder.typicode.com/todos/6',
+      'https://jsonplaceholder.typicode.com/todos/7',
+      'https://jsonplaceholder.typicode.com/todos/8',
+      'https://jsonplaceholder.typicode.com/todos/9',
+      'https://jsonplaceholder.typicode.com/todos/10',
     ]
+    class ConcurrentController {
+      constructor(max) {
+        this.max = max
+        this.stack = []
+      }
+      // add
+      add = (urls) => {
+        if (!Array.isArray(urls)) {
+          urls = [urls]
+        }
+        this.stack.push(...urls.map((url) => () => fetch(url)))
+
+        return this
+      }
+      // 进行触发
+      trigger = () => {
+        return new Promise((resolve) => {
+          if (!this.stack.length) return resolve([])
+          const result = []
+          let current = 0
+          const len = Math.min(this.stack.length, this.max)
+          const total = this.stack.length
+          const request = async () => {
+            if (!this.stack.length) return
+            const req = this.stack.shift()
+            const res = await req()
+            result[current++] = res
+            if (current === total) {
+              resolve(result)
+            }
+            request()
+          }
+          for (let i = 0; i < len; i++) {
+            request()
+          }
+        })
+      }
+    }
+
+    const twoController = new ConcurrentController(2)
+    const threeController = new ConcurrentController(3)
+
+    twoController.add(urls)
+    threeController.add(urls)
+
+    // 解开下面的注释查看效果
+    // twoController.trigger()
+    // three.trigger()
   </script>
 </body>
 
