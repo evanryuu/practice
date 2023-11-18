@@ -1,13 +1,17 @@
 const ArrayQueue = require('./arr')
+const NodeQueue = require('./node')
 
-const arrQueue = new ArrayQueue(10)
+// const queue = new ArrayQueue(10)
+const queue = new NodeQueue(10)
 
-arrQueue.pushFirst(0)
-arrQueue.pushFirst(1)
-arrQueue.pushLast(2)
-console.log(arrQueue.peekFirst())
-console.log(arrQueue.popFirst());
-console.log(arrQueue.peekFirst())
-console.log(arrQueue.popFirst());
-console.log(arrQueue.peekFirst())
-console.log(arrQueue.popFirst());
+queue.pushFirst(0)
+queue.pushFirst(1)
+queue.pushLast(2)
+console.log(queue.peekFirst())
+console.log(queue.popFirst());
+console.log(queue.peekFirst())
+console.log(queue.popFirst());
+console.log(queue.peekFirst())
+console.log(queue.popFirst());
+
+
