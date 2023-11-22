@@ -2,8 +2,6 @@
 
 const CACHE_NAME = 'my-cache-v1';
 const urlsToCache = [
-  '/',
-  './index.html',
   './images/cat.png',
   // Add more URLs to cache as needed
 ];
@@ -13,6 +11,8 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Cache opened');
+      caches.delete('./index.html')
+      caches.delete('/')
         return cache.addAll(urlsToCache);
       })
   );
