@@ -14,6 +14,11 @@ fn takes_owner_ship(some_string: String) -> String {
     some_string
 }
 
+fn dangle() -> &String {
+    let s = String::from("hello");
+    &s
+}
+
 fn main() {
     borrow_value_example();
     // 进入函数之后也会直接take所有权，必须要用另一个变量接住
