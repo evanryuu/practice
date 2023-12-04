@@ -4,6 +4,18 @@ fn main() {
     replace_str();
     pop_str();
     chars();
+    tuple()
+}
+
+fn tuple() {
+    fn calculate_length(s: String) -> (String, usize) {
+        let length = s.len();
+
+        return (s, length)
+    }
+    let s  = String::from("hello");
+    let (something, len) = calculate_length(s);
+    println!("something is: {}, length is {}", something, len)
 }
 
 fn push_str() {
