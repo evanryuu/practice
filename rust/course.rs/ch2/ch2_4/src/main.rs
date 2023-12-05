@@ -1,11 +1,74 @@
+
+#[derive(Debug)]
+struct User {
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
+}
+
+#[derive(Debug)]
+enum PokerSuit {
+    Clubs,
+    Spades,
+    Diamonds,
+    Hearts
+}
+
+#[derive(Debug)]
+struct PokerCard {
+    suit: PokerSuit,
+    value: u8
+}
+
 fn main() {
     push_str();
     insert_str();
     replace_str();
     pop_str();
     chars();
-    tuple()
+    tuple();
+    let user = create_user(String::from("Eren"));
+    let user2 = User {
+        email: String::from("user2@email.com"),
+        username: String::from("user2"),
+        ..user
+    };
+    println!("user2 email is: {}", user2.email);
+    println!("{}", user.active);
+    println!("{}", user.username);
+    println!("{:?}", user.sign_in_count);
+    card();
 }
+
+// struct PUser {
+//     active: bool,
+//     // username: &str, // 会报错缺少生命周期
+// }
+
+fn card() {
+    let c1 = PokerCard {
+        suit: PokerSuit::Clubs,
+        value: 1
+    };
+    let c2 = PokerCard {
+        suit: PokerSuit::Diamonds,
+        value: 2
+    };
+
+    println!("c1: {:?}, c2: {:?}", c1, c2);
+}
+
+fn create_user(name: String) -> User {
+   User {
+        active: false,
+        username: name,
+        email: String::from("user@email.com"),
+        sign_in_count: 0
+    }
+}
+
+
 
 fn tuple() {
     fn calculate_length(s: String) -> (String, usize) {
