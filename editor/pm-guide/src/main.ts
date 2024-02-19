@@ -5,13 +5,7 @@ import { EditorView } from "prosemirror-view";
 import "./style.css";
 import { keymap } from "prosemirror-keymap";
 import { DOMParser, Schema } from "prosemirror-model";
-import {
-  getTransactionCount,
-  keydownPlugin,
-  markAsUncounted,
-  purplePlugin,
-  specklePlugin,
-} from "./plugins";
+import { getTransactionCount, keydownPlugin, markAsUncounted, purplePlugin, specklePlugin } from "./plugins";
 import { ImageView, ParagraphView } from "./views";
 
 let isEditable = true;
@@ -22,7 +16,7 @@ const groupSchema = new Schema({
       group: "block",
       content: "text*",
       toDOM(node) {
-        return ["div", 0];
+        return ["p", 0];
       },
     },
     heading: {
@@ -48,7 +42,7 @@ let state = EditorState.create({
   schema,
   plugins: [
     keydownPlugin,
-    // purplePlugin,
+    // // purplePlugin,
     specklePlugin,
     // history(),
     // keymap({ "Mod-z": undo, "Mod-y": redo }),
@@ -68,11 +62,7 @@ let view = new EditorView(document.body.querySelector("#app"), {
     },
   },
   dispatchTransaction(transaction) {
-    console.log(
-      "Document size went from",
-      transaction.before.content.size,
-      transaction.doc.content.size
-    );
+    console.log("Document size went from", transaction.before.content.size, transaction.doc.content.size);
     console.log(getTransactionCount(state));
     let newState = view.state.apply(transaction);
     view.updateState(newState);
@@ -94,9 +84,15 @@ btn1?.addEventListener("click", () => {
 
 const replace = document.querySelector("#replace");
 replace?.addEventListener("click", () => {
-  console.log(state);
+  console.log(view.state.selection);
   const tr = view.state.tr;
-  view.dispatch(tr.deleteSelection().insertText("Hello").deleteSelection());
+  const { $from } = view.state.selection;
+  const str = "hello";
+  const newState = tr.deleteSelection().insertText(str);
+  view.dispatch(newState);
+  view.focus();
+  const focusState = view.state.tr.setSelection(TextSelection.create(tr.doc, $from.pos + str.length));
+  view.dispatch(focusState);
 });
 
 const editable = document.querySelector("#editable");
@@ -109,8 +105,8 @@ editable?.addEventListener("click", () => {
   });
 });
 
-function deleteSelection(state: EditorState, view: EditorView) {
+function deleteSelection(state: EditorState, view: EditorView | null) {
   if (state.selection.empty) return false;
-  if (view.dispatch) view.dispatch(state.tr.deleteSelection());
+  if (view?.dispatch) view.dispatch(state.tr.deleteSelection());
   return true;
 }
