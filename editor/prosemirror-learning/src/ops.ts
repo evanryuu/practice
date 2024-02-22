@@ -70,3 +70,36 @@ export function insertDatetime(editorView: EditorView, timestamp: number) {
   const tr = state.tr.replaceWith(state.tr.selection.from, state.tr.selection.to, node)
   dispatch(tr)
 }
+
+export function markBold(editorView: EditorView) {
+  const { state, dispatch } = editorView
+
+  const mark = state.schema.marks.bold.create(null)
+  const tr = state.tr.addMark(state.selection.from, state.selection.to, mark)
+  dispatch(tr)
+}
+export function markItalic(editorView: EditorView) {
+  const { state, dispatch } = editorView
+
+  const json = {
+    type: 'italic',
+  }
+
+  const mark = state.schema.markFromJSON(json)
+  const tr = state.tr.addMark(state.selection.from, state.selection.to, mark)
+  dispatch(tr)
+}
+export function markLink(editorView: EditorView) {
+  const { state, dispatch } = editorView
+
+  const json = {
+    type: 'link',
+    attrs: {
+      href: 'https://baidu.com',
+    },
+  }
+
+  const mark = state.schema.markFromJSON(json)
+  const tr = state.tr.addMark(state.selection.from, state.selection.to, mark)
+  dispatch(tr)
+}

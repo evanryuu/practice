@@ -122,5 +122,58 @@ export const schema = new Schema({
       ],
     },
   },
+  marks: {
+    bold: {
+      toDOM: () => {
+        return ['strong', 0]
+      },
+      parseDOM: [
+        { tag: 'strong' },
+        /**
+         * getAttrs 返回 false表示当前规则不匹配，
+         * 不匹配的则不会被解析为当前的 mark，
+         * 返回 undefined 或 null 则会为当前 mark 创建一个空的 attrs
+         * 如果正常返回内容，返回的内容则为从当前规则中解析出来的 attrs
+         */
+
+        { tag: 'b', getAttrs: (domNode) => (domNode as HTMLElement).style.fontWeight !== 'normal' && null },
+        { style: 'font-weight', getAttrs: (value) => /^(bold(er)?|[5-9]\d{2})$/.test(value as string) && null },
+      ],
+    },
+    italic: {
+      group: 'heading',
+      toDOM: () => {
+        return ['em', 0]
+      },
+      parseDOM: [
+        { tag: 'em' },
+        { tag: 'i', getAttrs: (node) => (node as HTMLElement).style.fontStyle !== 'normal' && null },
+        { style: 'font-style=italic' },
+      ],
+    },
+    link: {
+      group: 'heading',
+      attrs: {
+        href: {
+          default: null,
+        },
+        target: {
+          default: '_blank',
+        },
+        ref: {
+          default: 'noreferrer noopener nofollow',
+        },
+      },
+      toDOM: (mark) => {
+        const { href, target, ref } = mark.attrs
+        return ['a', { href, target, ref }, 0]
+      },
+      parseDOM: [
+        {
+          tag: 'a[href]:not([href *= "javascript:" i])',
+        },
+      ],
+    },
+  },
   topNode: 'doc',
 })

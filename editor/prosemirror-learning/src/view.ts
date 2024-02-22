@@ -7,7 +7,7 @@ import { keymap } from 'prosemirror-keymap'
 import { baseKeymap } from 'prosemirror-commands'
 // history 是操作历史，提供了对保存操作历史以及恢复等功能，undo，redo 函数对应为进行 undo 操作与 redo 操作，恢复历史数据
 import { history, undo, redo } from 'prosemirror-history'
-import { insertBlockQuote, insertDatetime, insertHeading, insertParagraph } from './ops'
+import { insertBlockQuote, insertDatetime, insertHeading, insertParagraph, markBold, markItalic, markLink } from './ops'
 
 export const setupEditor = (el: HTMLElement | null) => {
   if (!el) return
@@ -31,6 +31,7 @@ export const setupEditor = (el: HTMLElement | null) => {
     state: editorState,
   })
   const btnGroup = document.createElement('div')
+  const marksBtnGroup = document.createElement('div')
 
   const addParagraphBtn = document.createElement('button')
   addParagraphBtn.innerHTML = '<i class="ri-paragraph"></i>'
@@ -60,8 +61,30 @@ export const setupEditor = (el: HTMLElement | null) => {
   })
   btnGroup.appendChild(addDatetime)
 
+  const markBoldBtn = document.createElement('button')
+  markBoldBtn.innerHTML = '<i class="ri-bold"></i>'
+  markBoldBtn.addEventListener('click', () => {
+    markBold(editorView)
+  })
+  marksBtnGroup.appendChild(markBoldBtn)
+
+  const markItalicBtn = document.createElement('button')
+  markItalicBtn.innerHTML = '<i class="ri-italic"></i>'
+  markItalicBtn.addEventListener('click', () => {
+    markItalic(editorView)
+  })
+  marksBtnGroup.appendChild(markItalicBtn)
+
+  const markLinkBtn = document.createElement('button')
+  markLinkBtn.innerHTML = '<i class="ri-link"></i>'
+  markLinkBtn.addEventListener('click', () => {
+    markLink(editorView)
+  })
+  marksBtnGroup.appendChild(markLinkBtn)
+
   const fragment = document.createDocumentFragment()
   fragment.appendChild(btnGroup)
+  fragment.appendChild(marksBtnGroup)
   fragment.appendChild(editorRoot)
 
   el.appendChild(fragment)
