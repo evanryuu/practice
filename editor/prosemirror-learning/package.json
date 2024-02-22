@@ -18,6 +18,7 @@
     "prosemirror-keymap": "^1.2.2",
     "prosemirror-model": "^1.19.4",
     "prosemirror-state": "^1.4.3",
-    "prosemirror-view": "^1.32.7"
+    "prosemirror-view": "^1.32.7",
+    "remixicon": "^4.1.0"
   }
 }

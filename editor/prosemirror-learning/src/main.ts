@@ -1,5 +1,6 @@
 import './style.css'
 import { setupEditor } from './view'
+import 'remixicon/fonts/remixicon.css'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <div>

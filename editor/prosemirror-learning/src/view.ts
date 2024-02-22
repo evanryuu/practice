@@ -7,10 +7,12 @@ import { keymap } from 'prosemirror-keymap'
 import { baseKeymap } from 'prosemirror-commands'
 // history 是操作历史，提供了对保存操作历史以及恢复等功能，undo，redo 函数对应为进行 undo 操作与 redo 操作，恢复历史数据
 import { history, undo, redo } from 'prosemirror-history'
+import { insertBlockQuote, insertDatetime, insertHeading, insertParagraph } from './ops'
 
 export const setupEditor = (el: HTMLElement | null) => {
   if (!el) return
-
+  const editorRoot = document.createElement('div')
+  editorRoot.id = 'editorRoot'
   const editorState = EditorState.create({
     schema,
     // 新增 keymap 插件。
@@ -25,9 +27,45 @@ export const setupEditor = (el: HTMLElement | null) => {
   })
 
   // 创建编辑器视图实例，并挂在到 el 上
-  const editorView = new EditorView(el, {
+  const editorView = new EditorView(editorRoot, {
     state: editorState,
   })
+  const btnGroup = document.createElement('div')
+
+  const addParagraphBtn = document.createElement('button')
+  addParagraphBtn.innerHTML = '<i class="ri-paragraph"></i>'
+  addParagraphBtn.addEventListener('click', () => {
+    insertParagraph(editorView, '这是新段落')
+  })
+  btnGroup.appendChild(addParagraphBtn)
+
+  const addHeadingBtn = document.createElement('button')
+  addHeadingBtn.innerHTML = '<i class="ri-h-1"></i>'
+  addHeadingBtn.addEventListener('click', () => {
+    insertHeading(editorView, '这是新标题')
+  })
+  btnGroup.appendChild(addHeadingBtn)
+
+  const addBlockQuote = document.createElement('button')
+  addBlockQuote.innerHTML = '<i class="ri-text-block"></i>'
+  addBlockQuote.addEventListener('click', () => {
+    insertBlockQuote(editorView, '这是新BlockQuote')
+  })
+  btnGroup.appendChild(addBlockQuote)
+
+  const addDatetime = document.createElement('button')
+  addDatetime.innerHTML = '<i class="ri-calendar-view"></i>'
+  addDatetime.addEventListener('click', () => {
+    insertDatetime(editorView, +new Date())
+  })
+  btnGroup.appendChild(addDatetime)
+
+  const fragment = document.createDocumentFragment()
+  fragment.appendChild(btnGroup)
+  fragment.appendChild(editorRoot)
+
+  el.appendChild(fragment)
+
   window.editorView = editorView
   console.log('editorView', editorView)
 }
