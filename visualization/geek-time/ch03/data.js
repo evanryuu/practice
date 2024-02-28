@@ -45,12 +45,14 @@ function draw(parent, node, { fillStyle = 'rgba(0, 0, 0, 0.2)', textColor = 'whi
   circle.setAttribute('cy', y)
   circle.setAttribute('r', r)
   circle.setAttribute('fill', fillStyle)
+  circle.setAttribute('data-name', node.data.name)
   parent.appendChild(circle)
 
   if (children) {
     for (let i = 0; i < children.length; i++) {
       const group = document.createElementNS('http://www.w3.org/2000/svg', 'g')
       draw(group, children[i], { fillStyle, textColor })
+      group.setAttribute('data-name', node.data.name)
       parent.appendChild(group)
     }
   } else {
@@ -65,4 +67,30 @@ function draw(parent, node, { fillStyle = 'rgba(0, 0, 0, 0.2)', textColor = 'whi
     text.textContent = name
     parent.appendChild(text)
   }
+}
+
+export function addEvent(root) {
+  root = root || document.querySelector('svg')
+  let activeTarget = null
+  root.addEventListener('mousemove', (evt) => {
+    let target = evt.target
+    if (target.nodeName === 'text') target = target.parentNode
+    if (activeTarget !== target) {
+      if (activeTarget) {
+        activeTarget.setAttribute('fill', 'rgba(0, 0, 0, 0.2)')
+      }
+    }
+    target.setAttribute('fill', 'rgba(0, 128, 0, 0.1)')
+    document.querySelector('#title').innerText = getTitle(target)
+    activeTarget = target
+  })
+}
+
+function getTitle(target) {
+  const name = target.getAttribute('data-name')
+  if (target.parentNode && target.parentNode.nodeName === 'g') {
+    const parentName = target.parentNode.getAttribute('data-name')
+    return `${parentName}-${name}`
+  }
+  return name
 }

@@ -1,4 +1,4 @@
-import { init } from './data'
+import { addEvent, init } from './data'
 import './style.css'
 
 document.querySelector('#app').innerHTML = `
@@ -9,3 +9,4 @@ document.querySelector('#app').innerHTML = `
 `
 
 init()
+addEvent()
