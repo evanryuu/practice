@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="pause">pause</button>
+    <button id="trigger">trigger</button>
+    <script src="./person.js"></script>
+    <script>
+      const pause = document.querySelector("#pause");
+      const trigger = document.querySelector("#trigger");
+      const evan = new Person("Evan");
+      evan.shout().run(2000).eat(1500).sleep(3000).run(200);
+
+      pause.addEventListener("click", () => {
+        evan.pause();
+      });
+      trigger.addEventListener("click", () => {
+        evan.trigger();
+      });
+    </script>
+  </body>
+</html>
