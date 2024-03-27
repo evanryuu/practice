@@ -27,7 +27,7 @@ fn simple_match() {
     let penny_coin = Coin::Penny;
     let nickel_coin = Coin::Nickel;
     let quarter_coin = Coin::Quarter;
-    println!("result is {}", value_in_cents(dime_coin));
+    println!("result is {}", value_in_cents(dime_coin))
     println!("result is {}", value_in_cents(penny_coin));
     println!("result is {}", value_in_cents(nickel_coin));
     println!("result is {}", value_in_cents(quarter_coin));

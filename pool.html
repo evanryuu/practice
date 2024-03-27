@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const req = Array(20)
+        .fill(0)
+        .map((_, i) => `https://jsonplaceholder.typicode.com/todos/${i + 1}`);
+
+      class Pool {
+        constructor(max) {
+          this.max = max;
+          this.pause = false;
+          this.urls = [];
+        }
+        add = (urls) => {
+          this.urls.push(...urls);
+          return this;
+        };
+        run = () => {
+          for (let i = 0; i < this.max; i++) {
+            this.request();
+          }
+        };
+        request = async () => {
+          while (this.urls.length) {
+            await fetch(this.urls.shift());
+          }
+        };
+      }
+
+      const pool3 = new Pool(3);
+      pool3.add(req).run();
+    </script>
+  </body>
+</html>
